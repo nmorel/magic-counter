@@ -14,8 +14,8 @@ import {PlayerCounter} from '../components/PlayerCounter';
 import * as _ from 'lodash';
 
 class GameComponent extends Component {
-  onNewGame = () => {
-    this.props.actions.newGame(this.props.game.get('type'));
+  onNewGame = (type) => {
+    this.props.actions.newGame(type);
   };
 
   onAddPlayer = () => {
@@ -67,8 +67,14 @@ class GameComponent extends Component {
           {rows}
         </View>
         <View style={styles.toolbarContainer}>
-          <TouchableHighlight style={[styles.toolbarButton]} onPress={this.onNewGame}>
-            <Text style={[styles.toolbarText]}>New game</Text>
+          <TouchableHighlight style={[styles.toolbarButton]} onPress={() => this.onNewGame('standard')}>
+            <Text style={[styles.toolbarText]}>New standard</Text>
+          </TouchableHighlight>
+          <TouchableHighlight style={[styles.toolbarButton]} onPress={() => this.onNewGame('duelCommander')}>
+            <Text style={[styles.toolbarText]}>New duel EDH</Text>
+          </TouchableHighlight>
+          <TouchableHighlight style={[styles.toolbarButton]} onPress={() => this.onNewGame('commander')}>
+            <Text style={[styles.toolbarText]}>New EDH</Text>
           </TouchableHighlight>
           <TouchableHighlight style={[styles.toolbarButton]} onPress={this.onAddPlayer}>
             <Text style={[styles.toolbarText]}>Add player</Text>
