@@ -10,6 +10,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as gameActions from '../actions/gameActions';
 
+import {calculateFontSize} from '../helper';
+
 class PlayerCounterComponent extends Component {
 
   onIncrementLife = () => {
@@ -25,56 +27,53 @@ class PlayerCounterComponent extends Component {
   };
 
   render() {
+    const fontSizeSmall  = baseFontSizeSmall / this.props.nbPlayer;
+    const fontSizeMedium = baseFontSizeMedium / this.props.nbPlayer;
+    const fontSizeLarge  = baseFontSizeLarge / this.props.nbPlayer;
+
     const life = _.padStart(this.props.player.get('life').toString(), 2, '0');
 
     const dice = this.props.player.get('dice') ?
       (
-        <Text style={[styles.text]}>{this.props.player.get('dice')}</Text>
+        <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeSmall)}]}>{this.props.player.get('dice')}</Text>
       ) :
       (
         <TouchableHighlight style={[]} onPress={this.onRollDice}>
-          <Text style={[styles.text]}>Roll dice</Text>
+          <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeSmall)}]}>Roll dice</Text>
         </TouchableHighlight>
       );
 
     return (
-      <View style={[styles.container]}>
+      <View style={[styles.container, this.props.style]}>
         <TouchableHighlight style={[styles.button]} onPress={this.onDecrementLife}>
-          <Text style={[styles.text, styles.buttonText]}>-</Text>
+          <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeMedium)}]}>-</Text>
         </TouchableHighlight>
         <View style={[styles.lifeContainer]}>
-          <Text style={[styles.text, styles.name]}>{this.props.player.get('name')}</Text>
-          <Text style={[styles.text, styles.life]}>{life}</Text>
+          <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeSmall)}]}>{this.props.player.get('name')}</Text>
+          <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeLarge)}]}>{life}</Text>
           {dice}
         </View>
         <TouchableHighlight style={[styles.button]} onPress={this.onIncrementLife}>
-          <Text style={[styles.text, styles.buttonText]}>+</Text>
+          <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeMedium)}]}>+</Text>
         </TouchableHighlight>
       </View>
     )
   }
 }
-export const PlayerCounter = connect(state => ({
-    game: state.game
-  }),
+export const PlayerCounter = connect(undefined,
   (dispatch) => ({
     actions: bindActionCreators(gameActions, dispatch)
   })
 )(PlayerCounterComponent);
 
+const baseFontSizeSmall  = 40;
+const baseFontSizeMedium = 200;
+const baseFontSizeLarge  = 600;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
-    borderLeftWidth: 1,
-    borderLeftColor: 'white',
-    // borderLeftStyle: 'solid',
-    borderRightWidth: 1,
-    borderRightColor: 'white',
-    borderStyle: 'solid',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // backgroundColor: 'white'
+    flexDirection: 'row'
   },
 
   text: {
@@ -87,20 +86,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
 
-  buttonText: {
-    fontSize: 150
-  },
-
   lifeContainer: {
     alignItems: 'center',
     justifyContent: 'center'
-  },
-
-  name: {
-    fontSize: 20
-  },
-
-  life: {
-    fontSize: 200
   }
 });
