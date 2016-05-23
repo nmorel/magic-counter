@@ -4,6 +4,9 @@ import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 
+import android.os.Bundle;
+import android.view.WindowManager;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,5 +39,12 @@ public class MainActivity extends ReactActivity {
         return Arrays.<ReactPackage>asList(
             new MainReactPackage()
         );
+    }
+
+    @Override
+    protected void onCreate(Bundle icicle)
+    {
+        super.onCreate(icicle);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 }
