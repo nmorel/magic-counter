@@ -23,22 +23,38 @@ class GameComponent extends Component {
   };
 
   render() {
-    const players = this.props.game.get('players');
+    const isLandscape = this.props.layout === 'LANDSCAPE';
+    const players     = this.props.game.get('players');
     let nbCol;
     let orientation;
-    if (players.size < 4) {
-      nbCol       = players.size;
-      orientation = 'column';
-    } else if (players.size < 5) {
-      nbCol       = 2;
-      orientation = 'row';
-    } else if (players.size < 7) {
-      nbCol       = 3;
-      orientation = 'column';
+    if (isLandscape) {
+      if (players.size < 4) {
+        nbCol       = players.size;
+        orientation = 'column';
+      } else if (players.size < 5) {
+        nbCol       = 2;
+        orientation = 'row';
+      } else if (players.size < 7) {
+        nbCol       = 3;
+        orientation = 'column';
+      } else {
+        nbCol       = 3;
+        orientation = 'row';
+      }
     } else {
-      // TODO Above 4, we should change the layout
-      nbCol       = 3;
-      orientation = 'row';
+      if (players.size < 4) {
+        nbCol       = 1;
+        orientation = 'row';
+      } else if (players.size < 5) {
+        nbCol       = 2;
+        orientation = 'column';
+      } else if (players.size < 7) {
+        nbCol       = 2;
+        orientation = 'column';
+      } else {
+        nbCol       = 3;
+        orientation = 'column';
+      }
     }
 
     const chunks = _.chunk(players.toArray(), nbCol);
@@ -55,7 +71,7 @@ class GameComponent extends Component {
           style.borderTopColor = 'white';
           style.borderStyle    = 'solid';
         }
-        if (players.size === 5 && rowIndex === 1) {
+        if (players.size === 5 && ((rowIndex === 1 && isLandscape) || (rowIndex === 2 && !isLandscape))) {
           orientation = 'row';
         }
         return (
@@ -96,7 +112,8 @@ class GameComponent extends Component {
 }
 
 export const Game = connect(state => ({
-    game: state.game
+    game: state.game,
+    layout: state.layout,
   }),
   (dispatch) => ({
     actions: bindActionCreators(gameActions, dispatch)
