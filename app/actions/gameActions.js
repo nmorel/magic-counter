@@ -7,6 +7,12 @@ export function newGame(type) {
   };
 }
 
+export function resetGame() {
+  return {
+    type: types.RESET_GAME,
+  }
+}
+
 export function rollDice(player) {
   return {
     type: types.ROLL_DICE,

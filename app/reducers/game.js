@@ -2,29 +2,24 @@ import * as types from '../actions/actionTypes';
 import * as _ from 'lodash';
 import Immutable from 'immutable';
 
-const initialState = Immutable.Map({
-  type: 'standard',
-  players: Immutable.List([
-    Immutable.Map({
-      id: 1,
-      name: 'P01',
-      life: 20,
-      dice: null
-    }),
-    Immutable.Map({
-      id: 2,
-      name: 'P02',
-      life: 20,
-      dice: null
-    })
-  ])
-});
-
 class Game {
+  type;
   startingLife;
+  startingPlayerNumber;
 
-  constructor(_startingLife) {
-    this.startingLife = _startingLife;
+  constructor(_type, _startingLife, _startingPlayerNumber) {
+    this.type                 = _type;
+    this.startingLife         = _startingLife;
+    this.startingPlayerNumber = _startingPlayerNumber;
+  }
+
+  newGame() {
+    return Immutable.Map({
+      type: this.type,
+      players: Immutable.List.of(..._.range(1, this.startingPlayerNumber + 1))
+        .map(id => this.newPlayer(id))
+        .toList()
+    });
   }
 
   newPlayer(id) {
@@ -35,13 +30,25 @@ class Game {
       dice: null
     });
   }
+
+  reset(game) {
+    return game.update('players', players => {
+      return players.map(player => {
+        return player
+          .set('life', this.startingLife)
+          .set('dice', null);
+      })
+    });
+  }
 }
 
 const games = {
-  standard: new Game(20),
-  duelCommander: new Game(30),
-  commander: new Game(40)
+  standard: new Game('standard', 20, 2),
+  duelCommander: new Game('duelCommander', 30, 2),
+  commander: new Game('commander', 40, 3)
 };
+
+const initialState = games.standard.newGame();
 
 export default function (state = initialState, action = {}) {
   switch (action.type) {
@@ -49,13 +56,13 @@ export default function (state = initialState, action = {}) {
     // New game
     case types.NEW_GAME:
     {
-      const game = games[action.game];
-      return state
-        .set('type', action.game)
-        .set('players', Immutable.Seq.of(1, 2)
-          .map(id => game.newPlayer(id))
-          .toList()
-        );
+      return games[action.game].newGame();
+    }
+
+    // Reset game
+    case types.RESET_GAME:
+    {
+      return games[state.get('type')].reset(state);
     }
 
     // Rolling dice for a player

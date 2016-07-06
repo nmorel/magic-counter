@@ -11,17 +11,10 @@ import {bindActionCreators} from 'redux';
 import * as gameActions from '../actions/gameActions';
 
 import {PlayerCounter} from '../components/PlayerCounter';
+import {Menu} from '../components/Menu';
 import * as _ from 'lodash';
 
 class GameComponent extends Component {
-  onNewGame = (type) => {
-    this.props.actions.newGame(type);
-  };
-
-  onAddPlayer = () => {
-    this.props.actions.addPlayer();
-  };
-
   render() {
     const isLandscape = this.props.layout === 'LANDSCAPE';
     const players     = this.props.game.get('players');
@@ -92,20 +85,7 @@ class GameComponent extends Component {
         <View style={styles.playersContainer}>
           {rows}
         </View>
-        <View style={styles.toolbarContainer}>
-          <TouchableHighlight style={[styles.toolbarButton]} onPress={() => this.onNewGame('standard')}>
-            <Text style={[styles.toolbarText]}>New standard</Text>
-          </TouchableHighlight>
-          <TouchableHighlight style={[styles.toolbarButton]} onPress={() => this.onNewGame('duelCommander')}>
-            <Text style={[styles.toolbarText]}>New duel EDH</Text>
-          </TouchableHighlight>
-          <TouchableHighlight style={[styles.toolbarButton]} onPress={() => this.onNewGame('commander')}>
-            <Text style={[styles.toolbarText]}>New EDH</Text>
-          </TouchableHighlight>
-          <TouchableHighlight style={[styles.toolbarButton]} onPress={this.onAddPlayer}>
-            <Text style={[styles.toolbarText]}>Add player</Text>
-          </TouchableHighlight>
-        </View>
+        <Menu />
       </View>
     )
   }
@@ -135,22 +115,4 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row'
   },
-
-  toolbarContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff'
-  },
-
-  toolbarButton: {
-    padding: 10,
-    marginLeft: 10,
-    marginRight: 10
-  },
-
-  toolbarText: {
-    fontSize: 20,
-    color: '#000'
-  }
 });
