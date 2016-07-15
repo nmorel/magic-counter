@@ -11,6 +11,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as gameActions from '../actions/gameActions';
 
+import {icons, Icon} from './Icon';
+
 const menuWidth  = 200;
 const glassColor = 'rgba(0, 0, 0, 0.3)';
 
@@ -84,11 +86,16 @@ class MenuComponent extends Component {
 
         {this.state.visible && (
           <Animated.View style={[styles.menuContainer, menuStyle]}>
-            <Button text="New standard" action={() => this.onNewGame('standard')}/>
-            <Button text="New duel EDH" action={() => this.onNewGame('duelCommander')}/>
-            <Button text="New EDH" action={() => this.onNewGame('commander')}/>
-            <Button text="Add player" action={this.onAddPlayer}/>
-            <Button text="Reset" action={this.onReset}/>
+            <View style={[styles.button]}>
+              <IconAndText icon={icons.new} text="New game"/>
+              <Button icon=">" text="Standard" action={() => this.onNewGame('standard')}/>
+              <Button icon=">" text="Duel EDH" action={() => this.onNewGame('duelCommander')}/>
+              <Button icon=">" text="EDH" action={() => this.onNewGame('commander')}/>
+            </View>
+
+            <Button icon={icons.addPlayer} text="Add a player" action={this.onAddPlayer}/>
+
+            <Button icon={icons.reset} text="Reset" action={this.onReset}/>
           </Animated.View>
         )}
 
@@ -96,9 +103,7 @@ class MenuComponent extends Component {
           style={[styles.menuButton, {backgroundColor: this.state.visible ? '#fff': '#000', borderColor: this.state.visible ? '#000' : 'grey'}]}
           onPress={this.toggleMenu} underlayColor="rgba(0, 0, 0, 0)">
           <View>
-            <View style={[styles.bar, {backgroundColor: this.state.visible ? '#000' : 'grey'}]}/>
-            <View style={[styles.bar, {marginTop: 0, marginBottom: 0, backgroundColor: this.state.visible ? '#000' : 'grey'}]}/>
-            <View style={[styles.bar, {backgroundColor: this.state.visible ? '#000' : 'grey'}]}/>
+            <Icon icon={icons.menu} style={[styles.menuIcon]} />
           </View>
         </TouchableHighlight>
       </View>
@@ -106,12 +111,23 @@ class MenuComponent extends Component {
   }
 }
 
-function Button({text, action}) {
+function Button({text, icon, action}) {
   return (
     <TouchableHighlight style={[styles.button]} onPress={action}>
-      <Text style={[styles.text]}>{text}</Text>
+      <View style={[styles.buttonInner]}>
+        <IconAndText icon={icon} text={text}/>
+      </View>
     </TouchableHighlight>
   )
+}
+
+function IconAndText({icon, text, style}) {
+  return (
+    <View style={[styles.iconAndText]}>
+      {icon && <Icon icon={icon} style={[styles.icon, style]}/>}
+      {text && <Text style={[styles.text, style]}>{text}</Text>}
+    </View>
+  );
 }
 
 export const Menu = connect(
@@ -151,11 +167,9 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
   },
 
-  bar: {
-    width: 24,
-    height: 4,
-    margin: 4,
-    backgroundColor: 'grey',
+  menuIcon: {
+    color: 'grey',
+    fontSize: 32,
   },
 
   menuContainer: {
@@ -171,12 +185,25 @@ const styles = StyleSheet.create({
   button: {
     padding: 10,
     marginLeft: 10,
-    marginRight: 10
+    marginRight: 10,
+  },
+
+  buttonInner: {
+  },
+
+  iconAndText: {
+    flexDirection: 'row',
+  },
+
+  icon: {
+    fontSize: 24,
+    color: '#000',
+    marginTop: 2,
+    marginRight: 5,
   },
 
   text: {
     fontSize: 20,
     color: '#000',
-    textAlign: 'center',
   }
 });
