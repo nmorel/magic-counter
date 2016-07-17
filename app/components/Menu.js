@@ -5,6 +5,7 @@ import {
   TouchableHighlight,
   Text,
   Animated,
+  Slider,
 } from 'react-native';
 
 import {connect} from 'react-redux';
@@ -13,7 +14,7 @@ import * as gameActions from '../actions/gameActions';
 
 import {icons, Icon} from './Icon';
 
-const menuWidth  = 200;
+const menuWidth  = 300;
 const glassColor = 'rgba(0, 0, 0, 0.3)';
 
 class MenuComponent extends Component {
@@ -64,7 +65,17 @@ class MenuComponent extends Component {
     this.props.actions.addPlayer();
   };
 
+  onRemovePlayer = () => {
+    this.props.actions.removePlayer();
+  };
+
+  onChangeNumberOfPlayers = (numberOfPlayers) => {
+    this.props.actions.setNumberOfPlayers(numberOfPlayers);
+  };
+
   render() {
+    const {game} = this.props;
+
     const menuStyle = {
       transform: [
         {
@@ -86,14 +97,25 @@ class MenuComponent extends Component {
 
         {this.state.visible && (
           <Animated.View style={[styles.menuContainer, menuStyle]}>
-            <View style={[styles.button]}>
+            <View style={[styles.menuItem]}>
               <IconAndText icon={icons.new} text="New game"/>
               <Button icon=">" text="Standard" action={() => this.onNewGame('standard')}/>
               <Button icon=">" text="Duel EDH" action={() => this.onNewGame('duelCommander')}/>
               <Button icon=">" text="EDH" action={() => this.onNewGame('commander')}/>
             </View>
 
-            <Button icon={icons.addPlayer} text="Add a player" action={this.onAddPlayer}/>
+            <View style={[styles.menuItem]}>
+              <IconAndText icon={icons.addPlayer} text={`Players (${game.get('players').size})`}/>
+
+              <View style={[styles.sliderContainer]}>
+                <SmallButton disabled={game.get('players').size <= game.get('minPlayer')} icon={icons.remove} action={this.onRemovePlayer}/>
+                <View style={[styles.slider]} >
+                  <Slider minimumValue={game.get('minPlayer')} maximumValue={game.get('maxPlayer')} step={1}
+                          value={game.get('players').size} style={[{flex: 1}]} onValueChange={this.onChangeNumberOfPlayers}/>
+                </View>
+                <SmallButton disabled={game.get('players').size >= game.get('maxPlayer')} icon={icons.add} action={this.onAddPlayer}/>
+              </View>
+            </View>
 
             <Button icon={icons.reset} text="Reset" action={this.onReset}/>
           </Animated.View>
@@ -113,7 +135,7 @@ class MenuComponent extends Component {
 
 function Button({text, icon, action}) {
   return (
-    <TouchableHighlight style={[styles.button]} onPress={action}>
+    <TouchableHighlight style={[styles.menuItem, styles.button]} onPress={action}>
       <View style={[styles.buttonInner]}>
         <IconAndText icon={icon} text={text}/>
       </View>
@@ -130,8 +152,24 @@ function IconAndText({icon, text, style}) {
   );
 }
 
+function SmallButton({icon, disabled, action}) {
+  return disabled ? (
+    <View style={[styles.smallButton]}>
+      <Icon style={[styles.icon, styles.disabled]} icon={icon}/>
+    </View>
+  ) : (
+    <TouchableHighlight style={[styles.smallButton]} onPress={action}>
+      <View>
+        <Icon style={[styles.icon]} icon={icon}/>
+      </View>
+    </TouchableHighlight>
+  )
+}
+
 export const Menu = connect(
-  undefined,
+  (state) => ({
+    game: state.game
+  }),
   (dispatch) => ({
     actions: bindActionCreators(gameActions, dispatch)
   })
@@ -179,16 +217,34 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: menuWidth,
     backgroundColor: '#fff',
-    paddingTop: 50,
+    paddingTop: 5,
+  },
+
+  menuItem: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
 
   button: {
-    padding: 10,
-    marginLeft: 10,
-    marginRight: 10,
   },
 
   buttonInner: {
+  },
+
+  sliderContainer: {
+    flexDirection: 'row',
+    marginTop: 10,
+  },
+
+  slider: {
+    flex: 1,
+    paddingTop: 5,
+  },
+
+  smallButton: {
+    padding: 4,
   },
 
   iconAndText: {
@@ -205,5 +261,9 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     color: '#000',
-  }
+  },
+
+  disabled: {
+    color: 'grey',
+  },
 });

@@ -39,3 +39,16 @@ export function addPlayer() {
     type: types.ADD_PLAYER
   }
 }
+
+export function removePlayer() {
+  return {
+    type: types.REMOVE_PLAYER
+  }
+}
+
+export function setNumberOfPlayers(numberOfPlayers) {
+  return {
+    type: types.SET_NUMBER_OF_PLAYERS,
+    numberOfPlayers
+  }
+}

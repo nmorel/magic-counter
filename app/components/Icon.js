@@ -12,6 +12,8 @@ export const icons = {
   addPlayer: convertFontCode('e7f0'),
   reset: convertFontCode('e042'),
   menu: convertFontCode('e3c7'),
+  add: convertFontCode('e147'),
+  remove: convertFontCode('e15c'),
 };
 
 function convertFontCode(code){

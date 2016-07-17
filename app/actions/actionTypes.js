@@ -6,3 +6,5 @@ export const ROLL_DICE = 'ROLL_DICE';
 export const INC_LIFE  = 'INC_LIFE';
 export const DEC_LIFE  = 'DEC_LIFE';
 export const ADD_PLAYER  = 'ADD_PLAYER';
+export const REMOVE_PLAYER  = 'REMOVE_PLAYER';
+export const SET_NUMBER_OF_PLAYERS  = 'SET_NUMBER_OF_PLAYERS';

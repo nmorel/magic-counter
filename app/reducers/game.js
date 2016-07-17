@@ -5,18 +5,22 @@ import Immutable from 'immutable';
 class Game {
   type;
   startingLife;
-  startingPlayerNumber;
+  minPlayer;
+  maxPlayer;
 
-  constructor(_type, _startingLife, _startingPlayerNumber) {
-    this.type                 = _type;
-    this.startingLife         = _startingLife;
-    this.startingPlayerNumber = _startingPlayerNumber;
+  constructor(_type, _startingLife, _minPlayer, _maxPlayer) {
+    this.type         = _type;
+    this.startingLife = _startingLife;
+    this.minPlayer    = _minPlayer;
+    this.maxPlayer    = _maxPlayer || 18;
   }
 
   newGame() {
     return Immutable.Map({
       type: this.type,
-      players: Immutable.List.of(..._.range(1, this.startingPlayerNumber + 1))
+      minPlayer: this.minPlayer,
+      maxPlayer: this.maxPlayer,
+      players: Immutable.List.of(..._.range(1, this.minPlayer + 1))
         .map(id => this.newPlayer(id))
         .toList()
     });
@@ -104,6 +108,34 @@ export default function (state = initialState, action = {}) {
       const game = games[state.get('type')];
       return state.update('players', players => {
         return players.push(game.newPlayer(players.size + 1));
+      });
+    }
+
+    // Remove a player
+    case types.REMOVE_PLAYER: {
+      return state.update('players', players => {
+        return players.pop();
+      });
+    }
+
+    // Set the number of players
+    case types.SET_NUMBER_OF_PLAYERS: {
+      if (state.get('players').size === action.numberOfPlayers) {
+        return state;
+      }
+
+      const game = games[state.get('type')];
+      return state.update('players', players => {
+        if (players.size < action.numberOfPlayers) {
+          // Il faut ajouter des joueurs
+          while (players.size < action.numberOfPlayers) {
+            players = players.push(game.newPlayer(players.size + 1))
+          }
+        } else {
+          // Il faut retirer des joueurs
+          players = players.take(action.numberOfPlayers);
+        }
+        return players;
       });
     }
 
