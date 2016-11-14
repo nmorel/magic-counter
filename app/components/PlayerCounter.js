@@ -9,17 +9,19 @@ import {
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as gameActions from '../actions/gameActions';
+import {counterTypes} from '../constants';
+import {Counter} from './Counter';
 
 import {calculateFontSize, getColor} from '../helper';
 
 class PlayerCounterComponent extends Component {
 
   onIncrementLife = () => {
-    this.props.actions.incrementLife(this.props.player);
+    this.props.actions.incrementCounter(counterTypes.life, this.props.player);
   };
 
   onDecrementLife = () => {
-    this.props.actions.decrementLife(this.props.player);
+    this.props.actions.decrementCounter(counterTypes.life, this.props.player);
   };
 
   onRollDice = () => {
@@ -27,24 +29,24 @@ class PlayerCounterComponent extends Component {
   };
 
   render() {
-    const fontSizeSmall  = baseFontSizeSmall / this.props.nbPlayer;
+    const fontSizeSmall = baseFontSizeSmall / this.props.nbPlayer;
     const fontSizeMedium = baseFontSizeMedium / this.props.nbPlayer;
-    const fontSizeLarge  = baseFontSizeLarge / this.props.nbPlayer;
+    const fontSizeLarge = baseFontSizeLarge / this.props.nbPlayer;
 
     const life = _.padStart(this.props.player.get('life').toString(), 2, '0');
 
-    const dice = this.props.player.get('dice') ?
-      (
-        <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeSmall)}]}>{this.props.player.get('dice')}</Text>
-      ) :
-      (
-        <TouchableHighlight style={[]} onPress={this.onRollDice}>
-          <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeSmall)}]}>Roll dice</Text>
-        </TouchableHighlight>
-      );
+    // const dice = this.props.player.get('dice') ?
+    //   (
+    //     <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeSmall)}]}>{this.props.player.get('dice')}</Text>
+    //   ) :
+    //   (
+    //     <TouchableHighlight style={[]} onPress={this.onRollDice}>
+    //       <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeSmall)}]}>Roll dice</Text>
+    //     </TouchableHighlight>
+    //   );
 
     const incButton = (
-      <TouchableHighlight key={'inc'+this.props.player.id}
+      <TouchableHighlight key={'inc' + this.props.player.id}
                           style={[styles.button, orientationStyles[this.props.orientation].incButton]}
                           onPress={this.onIncrementLife}
                           underlayColor="rgba(0,0,0,0)">
@@ -53,7 +55,7 @@ class PlayerCounterComponent extends Component {
     );
 
     const decButton = (
-      <TouchableHighlight key={'dec'+this.props.player.id}
+      <TouchableHighlight key={'dec' + this.props.player.id}
                           style={[styles.button, orientationStyles[this.props.orientation].decButton]}
                           onPress={this.onDecrementLife}
                           underlayColor="rgba(0,0,0,0)">
@@ -66,18 +68,25 @@ class PlayerCounterComponent extends Component {
     return (
       <View style={[styles.container, this.props.style]}>
 
-        {/* Life */}
-        <View style={[styles.lifeContainer]}>
-          <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeLarge)}]}>{life}</Text>
+        <View style={[styles.container]}>
+          {/* Life */}
+          <View style={[styles.lifeContainer]}>
+            <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeLarge)}]}>{life}</Text>
+          </View>
+
+          <View style={[styles.buttonsContainer, orientationStyles[this.props.orientation].buttonsContainer]}>
+            {buttons}
+          </View>
+
+          {/* Player's name */}
+          <View style={[styles.nameContainer, {backgroundColor: getColor(this.props.player.get('id'))}]}>
+            <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeSmall)}]}>{this.props.player.get('name')}</Text>
+          </View>
         </View>
 
-        <View style={[styles.buttonsContainer, orientationStyles[this.props.orientation].buttonsContainer]}>
-          {buttons}
-        </View>
-
-        {/* Player's name */}
-        <View style={[styles.nameContainer, {backgroundColor: getColor(this.props.player.get('id'))}]}>
-          <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeSmall)}]}>{this.props.player.get('name')}</Text>
+        <View style={{height: 60, flexDirection: 'row'}}>
+          <Counter counter={counterTypes.poison} player={this.props.player} orientation="row" style={{borderRightWidth: 2, borderColor: '#fff'}}/>
+          <Counter counter={counterTypes.energy} player={this.props.player} orientation="row"/>
         </View>
       </View>
     )
@@ -89,9 +98,9 @@ export const PlayerCounter = connect(undefined,
   })
 )(PlayerCounterComponent);
 
-const baseFontSizeSmall  = 60;
+const baseFontSizeSmall = 60;
 const baseFontSizeMedium = 250;
-const baseFontSizeLarge  = 650;
+const baseFontSizeLarge = 650;
 
 const styles = StyleSheet.create({
   container: {

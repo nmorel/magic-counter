@@ -30,8 +30,10 @@ class Game {
     return Immutable.Map({
       id,
       name: 'P' + _.padStart(id.toString(), 2, '0'),
+      dice: null,
       life: this.startingLife,
-      dice: null
+      poison: 0,
+      energy: 0,
     });
   }
 
@@ -39,8 +41,10 @@ class Game {
     return game.update('players', players => {
       return players.map(player => {
         return player
+          .set('dice', null)
           .set('life', this.startingLife)
-          .set('dice', null);
+          .set('poison', 0)
+          .set('energy', 0);
       })
     });
   }
@@ -80,24 +84,24 @@ export default function (state = initialState, action = {}) {
       });
     }
 
-    // Increment player's life by 1
-    case types.INC_LIFE:
+    // Increment player's counter by 1
+    case types.INC_COUNTER:
     {
       return state.update('players', players => {
         return players.update(
           players.findIndex(player => player.get('id') === action.playerId),
-          player => player.set('life', player.get('life') + 1)
+          player => player.set(action.counter.id, player.get(action.counter.id) + 1)
         )
       });
     }
 
-    // Decrement player's life by 1
-    case types.DEC_LIFE:
+    // Decrement player's counter by 1
+    case types.DEC_COUNTER:
     {
       return state.update('players', players => {
         return players.update(
           players.findIndex(player => player.get('id') === action.playerId),
-          player => player.set('life', player.get('life') - 1)
+          player => player.set(action.counter.id, player.get(action.counter.id) - 1)
         )
       });
     }

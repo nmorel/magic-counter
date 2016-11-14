@@ -1,4 +1,5 @@
 import * as types from './actionTypes';
+import {counterTypes} from '../constants';
 
 export function newGame(type) {
   return {
@@ -20,16 +21,18 @@ export function rollDice(player) {
   }
 }
 
-export function incrementLife(player) {
+export function incrementCounter(counter, player) {
   return {
-    type: types.INC_LIFE,
+    type: types.INC_COUNTER,
+    counter,
     playerId: player.get('id')
   }
 }
 
-export function decrementLife(player) {
+export function decrementCounter(counter, player) {
   return {
-    type: types.DEC_LIFE,
+    type: types.DEC_COUNTER,
+    counter,
     playerId: player.get('id')
   }
 }
