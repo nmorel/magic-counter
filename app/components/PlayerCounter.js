@@ -11,6 +11,7 @@ import {bindActionCreators} from 'redux';
 import * as gameActions from '../actions/gameActions';
 import {counterTypes} from '../constants';
 import {Counter} from './Counter';
+import * as _ from 'lodash';
 
 import {calculateFontSize, getColor} from '../helper';
 
@@ -85,7 +86,8 @@ class PlayerCounterComponent extends Component {
         </View>
 
         <View style={{height: 60, flexDirection: 'row'}}>
-          <Counter counter={counterTypes.poison} player={this.props.player} orientation="row" style={{borderRightWidth: 2, borderColor: '#fff'}}/>
+          {/*<Counter counter={counterTypes.poison} player={this.props.player} orientation="row"*/}
+                   {/*style={{borderRightWidth: 2, borderColor: '#fff'}}/>*/}
           <Counter counter={counterTypes.energy} player={this.props.player} orientation="row"/>
         </View>
       </View>

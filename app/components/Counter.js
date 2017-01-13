@@ -117,13 +117,13 @@ const styles = StyleSheet.create({
   incButton: {
     alignItems: 'flex-end',
     justifyContent: 'center',
-    paddingRight: 10
+    paddingRight: 20
   },
 
   decButton: {
     alignItems: 'flex-start',
     justifyContent: 'center',
-    paddingLeft: 10
+    paddingLeft: 20
   },
 
   lifeContainer: {
