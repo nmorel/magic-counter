@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 import {initStore} from './store';
 import {Provider} from 'react-redux';
 import {LAYOUT_CHANGE} from './actions/actionTypes';
