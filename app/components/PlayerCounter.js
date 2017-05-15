@@ -67,27 +67,20 @@ class PlayerCounterComponent extends Component {
     return (
       <View style={[styles.container, this.props.style]}>
 
-        <View style={[styles.container]}>
-          {/* Life */}
-          <View style={[styles.lifeContainer]}>
-            <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeLarge)}]}>{life}</Text>
-          </View>
-
-          <View style={[styles.buttonsContainer, orientationStyles[this.props.orientation].buttonsContainer]}>
-            {buttons}
-          </View>
-
-          {/* Player's name */}
-          <View style={[styles.nameContainer, {backgroundColor: getColor(this.props.player.id)}]}>
-            <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeSmall)}]}>{this.props.player.name}</Text>
-          </View>
+        {/* Life */}
+        <View style={[styles.lifeContainer]}>
+          <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeLarge)}]}>{life}</Text>
         </View>
 
-        <View style={{height: 60, flexDirection: 'row'}}>
-          {/*<Counter counter={counterTypes.poison} player={this.props.player} orientation="row"*/}
-          {/*style={{borderRightWidth: 2, borderColor: '#fff'}}/>*/}
-          <Counter counter={counterTypes.energy} player={this.props.player} orientation="row" />
+        <View style={[styles.buttonsContainer, orientationStyles[this.props.orientation].buttonsContainer]}>
+          {buttons}
         </View>
+
+        {/* Player's name */}
+        <View style={[styles.nameContainer, {backgroundColor: getColor(this.props.player.id)}]}>
+          <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeSmall)}]}>{this.props.player.name}</Text>
+        </View>
+
       </View>
     );
   }
