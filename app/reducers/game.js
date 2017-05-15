@@ -57,24 +57,21 @@ class Game {
 const games = {
   standard: new Game('standard', 20, 2),
   duelCommander: new Game('duelCommander', 30, 2),
-  commander: new Game('commander', 40, 3)
+  commander: new Game('commander', 40, 3),
 };
 
 const initialState = games.standard.newGame();
 
-export default function (state = initialState, action = {}) {
+export default function(state = initialState, action = {}) {
   switch (action.type) {
-
     // New game
     case types.NEW_GAME: {
       return games[action.game].newGame();
     }
-
     // Reset game
     case types.RESET_GAME: {
       return games[state.type].reset(state);
     }
-
     // Rolling dice for a player
     case types.ROLL_DICE: {
       return {
@@ -84,14 +81,13 @@ export default function (state = initialState, action = {}) {
             return {
               ...player,
               dice: random(1, 20),
-            }
+            };
           } else {
             return player;
           }
         }),
       };
     }
-
     // Increment player's counter by 1
     case types.INC_COUNTER: {
       return {
@@ -101,14 +97,13 @@ export default function (state = initialState, action = {}) {
             return {
               ...player,
               [action.counter.id]: player[action.counter.id] + 1,
-            }
+            };
           } else {
             return player;
           }
         }),
       };
     }
-
     // Decrement player's counter by 1
     case types.DEC_COUNTER: {
       return {
@@ -118,26 +113,21 @@ export default function (state = initialState, action = {}) {
             return {
               ...player,
               [action.counter.id]: player[action.counter.id] - 1,
-            }
+            };
           } else {
             return player;
           }
         }),
       };
     }
-
     // Add a player
     case types.ADD_PLAYER: {
       const game = games[state.type];
       return {
         ...state,
-        players: [
-          ...state.players,
-          game.newPlayer(state.players.length + 1),
-        ],
+        players: [...state.players, game.newPlayer(state.players.length + 1)],
       };
     }
-
     // Remove a player
     case types.REMOVE_PLAYER: {
       return {
@@ -145,7 +135,6 @@ export default function (state = initialState, action = {}) {
         players: state.players.slice(0, state.players.length - 1),
       };
     }
-
     // Set the number of players
     case types.SET_NUMBER_OF_PLAYERS: {
       if (state.players.length === action.numberOfPlayers) {
@@ -157,7 +146,7 @@ export default function (state = initialState, action = {}) {
         const game = games[state.type];
         players = [...state.players];
         for (let i = state.players.length; i < action.numberOfPlayers; i++) {
-          players.push(game.newPlayer(i))
+          players.push(game.newPlayer(i));
         }
       } else {
         players = state.players.slice(0, action.numberOfPlayers - 1);

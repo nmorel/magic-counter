@@ -1,10 +1,5 @@
 import React, {Component} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableHighlight
-} from 'react-native';
+import {StyleSheet, Text, View, TouchableHighlight} from 'react-native';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -16,7 +11,6 @@ import * as _ from 'lodash';
 import {calculateFontSize, getColor} from '../helper';
 
 class PlayerCounterComponent extends Component {
-
   onIncrementLife = () => {
     this.props.actions.incrementCounter(counterTypes.life, this.props.player);
   };
@@ -47,19 +41,23 @@ class PlayerCounterComponent extends Component {
     //   );
 
     const incButton = (
-      <TouchableHighlight key={'inc' + this.props.player.id}
-                          style={[styles.button, orientationStyles[this.props.orientation].incButton]}
-                          onPress={this.onIncrementLife}
-                          underlayColor="rgba(0,0,0,0)">
+      <TouchableHighlight
+        key={'inc' + this.props.player.id}
+        style={[styles.button, orientationStyles[this.props.orientation].incButton]}
+        onPress={this.onIncrementLife}
+        underlayColor="rgba(0,0,0,0)"
+      >
         <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeMedium)}]}>+</Text>
       </TouchableHighlight>
     );
 
     const decButton = (
-      <TouchableHighlight key={'dec' + this.props.player.id}
-                          style={[styles.button, orientationStyles[this.props.orientation].decButton]}
-                          onPress={this.onDecrementLife}
-                          underlayColor="rgba(0,0,0,0)">
+      <TouchableHighlight
+        key={'dec' + this.props.player.id}
+        style={[styles.button, orientationStyles[this.props.orientation].decButton]}
+        onPress={this.onDecrementLife}
+        underlayColor="rgba(0,0,0,0)"
+      >
         <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeMedium)}]}>-</Text>
       </TouchableHighlight>
     );
@@ -87,18 +85,16 @@ class PlayerCounterComponent extends Component {
 
         <View style={{height: 60, flexDirection: 'row'}}>
           {/*<Counter counter={counterTypes.poison} player={this.props.player} orientation="row"*/}
-                   {/*style={{borderRightWidth: 2, borderColor: '#fff'}}/>*/}
-          <Counter counter={counterTypes.energy} player={this.props.player} orientation="row"/>
+          {/*style={{borderRightWidth: 2, borderColor: '#fff'}}/>*/}
+          <Counter counter={counterTypes.energy} player={this.props.player} orientation="row" />
         </View>
       </View>
-    )
+    );
   }
 }
-export const PlayerCounter = connect(undefined,
-  (dispatch) => ({
-    actions: bindActionCreators(gameActions, dispatch)
-  })
-)(PlayerCounterComponent);
+export const PlayerCounter = connect(undefined, dispatch => ({
+  actions: bindActionCreators(gameActions, dispatch),
+}))(PlayerCounterComponent);
 
 const baseFontSizeSmall = 60;
 const baseFontSizeMedium = 250;
@@ -106,7 +102,7 @@ const baseFontSizeLarge = 650;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
 
   nameContainer: {
@@ -114,7 +110,7 @@ const styles = StyleSheet.create({
     top: 5,
     left: 5,
     padding: 5,
-    borderRadius: 5
+    borderRadius: 5,
   },
 
   buttonsContainer: {
@@ -123,56 +119,56 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    flex: 1
+    flex: 1,
   },
 
   text: {
-    color: '#fff'
+    color: '#fff',
   },
 
   button: {
-    flex: 1
+    flex: 1,
   },
 
   lifeContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });
 
 const orientationStyles = {
   column: StyleSheet.create({
     buttonsContainer: {
-      flexDirection: 'column'
+      flexDirection: 'column',
     },
 
     incButton: {
       alignItems: 'center',
-      justifyContent: 'flex-start'
+      justifyContent: 'flex-start',
     },
 
     decButton: {
       alignItems: 'center',
-      justifyContent: 'flex-end'
-    }
+      justifyContent: 'flex-end',
+    },
   }),
 
   row: StyleSheet.create({
     buttonsContainer: {
-      flexDirection: 'row'
+      flexDirection: 'row',
     },
 
     incButton: {
       alignItems: 'flex-end',
       justifyContent: 'center',
-      paddingRight: 30
+      paddingRight: 30,
     },
 
     decButton: {
       alignItems: 'flex-start',
       justifyContent: 'center',
-      paddingLeft: 30
-    }
-  })
+      paddingLeft: 30,
+    },
+  }),
 };

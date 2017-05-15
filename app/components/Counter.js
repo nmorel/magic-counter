@@ -1,11 +1,5 @@
 import React, {Component} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableHighlight,
-  Image,
-} from 'react-native';
+import {StyleSheet, Text, View, TouchableHighlight, Image} from 'react-native';
 import * as _ from 'lodash';
 
 import {connect} from 'react-redux';
@@ -13,7 +7,6 @@ import {bindActionCreators} from 'redux';
 import * as gameActions from '../actions/gameActions';
 
 class CounterComponent extends Component {
-
   onIncrement = () => {
     this.props.actions.incrementCounter(this.props.counter, this.props.player);
   };
@@ -27,24 +20,26 @@ class CounterComponent extends Component {
     const counterValue = player[counter.id];
 
     const incButton = (
-      <TouchableHighlight key={'inc' + counter.id + '$' + player.id}
-                          style={[styles.button, styles.incButton]}
-                          onPress={this.onIncrement}
-                          underlayColor="rgba(0,0,0,0)">
+      <TouchableHighlight
+        key={'inc' + counter.id + '$' + player.id}
+        style={[styles.button, styles.incButton]}
+        onPress={this.onIncrement}
+        underlayColor="rgba(0,0,0,0)"
+      >
         <Text style={[styles.text, {fontSize: 30}]}>+</Text>
       </TouchableHighlight>
     );
 
-    const decButton = counterValue > 0 ? (
-      <TouchableHighlight key={'dec' + counter.id + '$' + player.id}
-                          style={[styles.button, styles.decButton]}
-                          onPress={this.onDecrement}
-                          underlayColor="rgba(0,0,0,0)">
-        <Text style={[styles.text, {fontSize: 30}]}>-</Text>
-      </TouchableHighlight>
-    ) : (
-      <View key={'dec' + counter.id + '$' + player.id} style={[styles.button, styles.decButton]}/>
-    );
+    const decButton = counterValue > 0
+      ? <TouchableHighlight
+          key={'dec' + counter.id + '$' + player.id}
+          style={[styles.button, styles.decButton]}
+          onPress={this.onDecrement}
+          underlayColor="rgba(0,0,0,0)"
+        >
+          <Text style={[styles.text, {fontSize: 30}]}>-</Text>
+        </TouchableHighlight>
+      : <View key={'dec' + counter.id + '$' + player.id} style={[styles.button, styles.decButton]} />;
 
     const buttons = this.props.orientation === 'row' ? [decButton, incButton] : [incButton, decButton];
 
@@ -53,7 +48,7 @@ class CounterComponent extends Component {
 
         {/* Counter */}
         <View style={[styles.lifeContainer]}>
-          <Image source={counter.icon} style={styles.icon}/>
+          <Image source={counter.icon} style={styles.icon} />
           <Text style={[styles.text, {fontSize: 30}]}>{_.padStart(counterValue.toString(), 2, '0')}</Text>
         </View>
 
@@ -61,14 +56,12 @@ class CounterComponent extends Component {
           {buttons}
         </View>
       </View>
-    )
+    );
   }
 }
-export const Counter = connect(undefined,
-  (dispatch) => ({
-    actions: bindActionCreators(gameActions, dispatch)
-  })
-)(CounterComponent);
+export const Counter = connect(undefined, dispatch => ({
+  actions: bindActionCreators(gameActions, dispatch),
+}))(CounterComponent);
 
 const styles = StyleSheet.create({
   container: {
@@ -86,7 +79,7 @@ const styles = StyleSheet.create({
     top: 5,
     left: 5,
     padding: 5,
-    borderRadius: 5
+    borderRadius: 5,
   },
 
   buttonsContainer: {
@@ -107,29 +100,29 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    color: '#000'
+    color: '#000',
   },
 
   button: {
-    flex: 1
+    flex: 1,
   },
 
   incButton: {
     alignItems: 'flex-end',
     justifyContent: 'center',
-    paddingRight: 20
+    paddingRight: 20,
   },
 
   decButton: {
     alignItems: 'flex-start',
     justifyContent: 'center',
-    paddingLeft: 20
+    paddingLeft: 20,
   },
 
   lifeContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'row'
-  }
+    flexDirection: 'row',
+  },
 });

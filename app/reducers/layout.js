@@ -6,11 +6,9 @@ const initialState = {
   layout: 'LANDSCAPE',
 };
 
-export default function (state = initialState, {type, payload}) {
+export default function(state = initialState, {type, payload}) {
   switch (type) {
-
-    case types.LAYOUT_CHANGE:
-    {
+    case types.LAYOUT_CHANGE: {
       return payload;
     }
 

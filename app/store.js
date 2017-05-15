@@ -10,9 +10,7 @@ let store;
 export function initStore() {
   // Création du store Redux
   const middlewares = [];
-  store             = createStore(reducers, {}, compose(
-    applyMiddleware(...middlewares)
-  ));
+  store = createStore(reducers, {}, compose(applyMiddleware(...middlewares)));
   return store;
 }
 

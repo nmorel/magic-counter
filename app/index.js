@@ -12,17 +12,16 @@ const store = initStore();
  * Index commun entre iOS et Android
  */
 export default class extends Component {
-
-  onLayout = (event) => {
+  onLayout = event => {
     const {width, height} = event.nativeEvent.layout;
     store.dispatch({
       type: LAYOUT_CHANGE,
       payload: {
         width,
         height,
-        layout: (width > height) ? 'LANDSCAPE' : 'PORTRAIT',
-      }
-    })
+        layout: width > height ? 'LANDSCAPE' : 'PORTRAIT',
+      },
+    });
   };
 
   render() {
@@ -34,5 +33,4 @@ export default class extends Component {
       </Provider>
     );
   }
-
 }
