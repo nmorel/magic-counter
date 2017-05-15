@@ -24,7 +24,7 @@ class CounterComponent extends Component {
 
   render() {
     const {counter, player} = this.props;
-    const counterValue = player.get(counter.id);
+    const counterValue = player[counter.id];
 
     const incButton = (
       <TouchableHighlight key={'inc' + counter.id + '$' + player.id}

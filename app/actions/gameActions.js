@@ -17,7 +17,7 @@ export function resetGame() {
 export function rollDice(player) {
   return {
     type: types.ROLL_DICE,
-    playerId: player.get('id')
+    playerId: player.id
   }
 }
 
@@ -25,7 +25,7 @@ export function incrementCounter(counter, player) {
   return {
     type: types.INC_COUNTER,
     counter,
-    playerId: player.get('id')
+    playerId: player.id
   }
 }
 
@@ -33,7 +33,7 @@ export function decrementCounter(counter, player) {
   return {
     type: types.DEC_COUNTER,
     counter,
-    playerId: player.get('id')
+    playerId: player.id
   }
 }
 

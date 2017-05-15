@@ -17,7 +17,11 @@ export default class extends Component {
     const {width, height} = event.nativeEvent.layout;
     store.dispatch({
       type: LAYOUT_CHANGE,
-      payload: (width > height) ? 'LANDSCAPE' : 'PORTRAIT'
+      payload: {
+        width,
+        height,
+        layout: (width > height) ? 'LANDSCAPE' : 'PORTRAIT',
+      }
     })
   };
 

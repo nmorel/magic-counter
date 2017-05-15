@@ -105,15 +105,15 @@ class MenuComponent extends Component {
             </View>
 
             <View style={[styles.menuItem]}>
-              <IconAndText icon={icons.addPlayer} text={`Players (${game.get('players').size})`}/>
+              <IconAndText icon={icons.addPlayer} text={`Players (${game.players.length})`}/>
 
               <View style={[styles.sliderContainer]}>
-                <SmallButton disabled={game.get('players').size <= game.get('minPlayer')} icon={icons.remove} action={this.onRemovePlayer}/>
+                <SmallButton disabled={game.players.length <= game.minPlayer} icon={icons.remove} action={this.onRemovePlayer}/>
                 <View style={[styles.slider]} >
-                  <Slider minimumValue={game.get('minPlayer')} maximumValue={game.get('maxPlayer')} step={1}
-                          value={game.get('players').size} style={[{flex: 1}]} onValueChange={this.onChangeNumberOfPlayers}/>
+                  <Slider minimumValue={game.minPlayer} maximumValue={game.maxPlayer} step={1}
+                          value={game.players.length} style={[{flex: 1}]} onValueChange={this.onChangeNumberOfPlayers}/>
                 </View>
-                <SmallButton disabled={game.get('players').size >= game.get('maxPlayer')} icon={icons.add} action={this.onAddPlayer}/>
+                <SmallButton disabled={game.players.length >= game.maxPlayer} icon={icons.add} action={this.onAddPlayer}/>
               </View>
             </View>
 

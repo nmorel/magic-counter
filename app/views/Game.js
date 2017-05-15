@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import {
   StyleSheet,
   View,
-  TouchableHighlight,
-  Text
 } from 'react-native';
 
 import {connect} from 'react-redux';
@@ -17,17 +15,17 @@ import * as _ from 'lodash';
 class GameComponent extends Component {
   render() {
     const isLandscape = this.props.layout === 'LANDSCAPE';
-    const players     = this.props.game.get('players');
+    const players     = this.props.game.players;
     let nbCol;
     let orientation;
     if (isLandscape) {
-      if (players.size < 4) {
-        nbCol       = players.size;
+      if (players.length < 4) {
+        nbCol       = players.length;
         orientation = 'column';
-      } else if (players.size < 5) {
+      } else if (players.length < 5) {
         nbCol       = 2;
         orientation = 'row';
-      } else if (players.size < 7) {
+      } else if (players.length < 7) {
         nbCol       = 3;
         orientation = 'column';
       } else {
@@ -35,13 +33,13 @@ class GameComponent extends Component {
         orientation = 'row';
       }
     } else {
-      if (players.size < 4) {
+      if (players.length < 4) {
         nbCol       = 1;
         orientation = 'row';
-      } else if (players.size < 5) {
+      } else if (players.length < 5) {
         nbCol       = 2;
         orientation = 'column';
-      } else if (players.size < 7) {
+      } else if (players.length < 7) {
         nbCol       = 2;
         orientation = 'column';
       } else {
@@ -50,7 +48,7 @@ class GameComponent extends Component {
       }
     }
 
-    const chunks = _.chunk(players.toArray(), nbCol);
+    const chunks = _.chunk(players, nbCol);
     const rows   = _.map(chunks, (chunk, rowIndex) => {
       const cells = _.map(chunk, (player, colIndex) => {
         const style = {};
@@ -64,12 +62,12 @@ class GameComponent extends Component {
           style.borderTopColor = 'white';
           style.borderStyle    = 'solid';
         }
-        if (players.size === 5 && ((rowIndex === 1 && isLandscape) || (rowIndex === 2 && !isLandscape))) {
+        if (players.length === 5 && ((rowIndex === 1 && isLandscape) || (rowIndex === 2 && !isLandscape))) {
           orientation = 'row';
         }
         return (
-          <PlayerCounter key={player.get('id')} player={player} orientation={orientation}
-                         style={style} nbPlayer={nbCol + chunks.length - 1}></PlayerCounter>
+          <PlayerCounter key={player.id} player={player} orientation={orientation}
+                         style={style} nbPlayer={nbCol + chunks.length - 1}/>
         );
       });
 
@@ -93,7 +91,7 @@ class GameComponent extends Component {
 
 export const Game = connect(state => ({
     game: state.game,
-    layout: state.layout,
+    layout: state.layout.layout,
   }),
   (dispatch) => ({
     actions: bindActionCreators(gameActions, dispatch)

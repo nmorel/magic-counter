@@ -1,6 +1,6 @@
 import * as types from '../actions/actionTypes';
-import * as _ from 'lodash';
-import Immutable from 'immutable';
+import padStart from 'lodash/padStart';
+import random from 'lodash/random';
 
 class Game {
   type;
@@ -9,44 +9,48 @@ class Game {
   maxPlayer;
 
   constructor(_type, _startingLife, _minPlayer, _maxPlayer) {
-    this.type         = _type;
+    this.type = _type;
     this.startingLife = _startingLife;
-    this.minPlayer    = _minPlayer;
-    this.maxPlayer    = _maxPlayer || 18;
+    this.minPlayer = _minPlayer;
+    this.maxPlayer = _maxPlayer || 18;
   }
 
   newGame() {
-    return Immutable.Map({
+    const players = [];
+    for (let i = 1; i < this.minPlayer + 1; i++) {
+      players.push(this.newPlayer(i));
+    }
+
+    return {
       type: this.type,
       minPlayer: this.minPlayer,
       maxPlayer: this.maxPlayer,
-      players: Immutable.List.of(..._.range(1, this.minPlayer + 1))
-        .map(id => this.newPlayer(id))
-        .toList()
-    });
+      players,
+    };
   }
 
   newPlayer(id) {
-    return Immutable.Map({
+    return {
       id,
-      name: 'P' + _.padStart(id.toString(), 2, '0'),
+      name: 'P' + padStart(id.toString(), 2, '0'),
       dice: null,
       life: this.startingLife,
       poison: 0,
       energy: 0,
-    });
+    };
   }
 
   reset(game) {
-    return game.update('players', players => {
-      return players.map(player => {
-        return player
-          .set('dice', null)
-          .set('life', this.startingLife)
-          .set('poison', 0)
-          .set('energy', 0);
-      })
-    });
+    return {
+      ...game,
+      players: game.players.map(player => ({
+        ...player,
+        dice: null,
+        life: this.startingLife,
+        poison: 0,
+        energy: 0,
+      })),
+    };
   }
 }
 
@@ -62,85 +66,107 @@ export default function (state = initialState, action = {}) {
   switch (action.type) {
 
     // New game
-    case types.NEW_GAME:
-    {
+    case types.NEW_GAME: {
       return games[action.game].newGame();
     }
 
     // Reset game
-    case types.RESET_GAME:
-    {
-      return games[state.get('type')].reset(state);
+    case types.RESET_GAME: {
+      return games[state.type].reset(state);
     }
 
     // Rolling dice for a player
-    case types.ROLL_DICE:
-    {
-      return state.update('players', players => {
-        return players.update(
-          players.findIndex(player => player.get('id') === action.playerId),
-          player => player.set('dice', _.random(1, 20))
-        )
-      });
+    case types.ROLL_DICE: {
+      return {
+        ...state,
+        players: state.players.map(player => {
+          if (player.id === action.playerId) {
+            return {
+              ...player,
+              dice: random(1, 20),
+            }
+          } else {
+            return player;
+          }
+        }),
+      };
     }
 
     // Increment player's counter by 1
-    case types.INC_COUNTER:
-    {
-      return state.update('players', players => {
-        return players.update(
-          players.findIndex(player => player.get('id') === action.playerId),
-          player => player.set(action.counter.id, player.get(action.counter.id) + 1)
-        )
-      });
+    case types.INC_COUNTER: {
+      return {
+        ...state,
+        players: state.players.map(player => {
+          if (player.id === action.playerId) {
+            return {
+              ...player,
+              [action.counter.id]: player[action.counter.id] + 1,
+            }
+          } else {
+            return player;
+          }
+        }),
+      };
     }
 
     // Decrement player's counter by 1
-    case types.DEC_COUNTER:
-    {
-      return state.update('players', players => {
-        return players.update(
-          players.findIndex(player => player.get('id') === action.playerId),
-          player => player.set(action.counter.id, player.get(action.counter.id) - 1)
-        )
-      });
+    case types.DEC_COUNTER: {
+      return {
+        ...state,
+        players: state.players.map(player => {
+          if (player.id === action.playerId) {
+            return {
+              ...player,
+              [action.counter.id]: player[action.counter.id] - 1,
+            }
+          } else {
+            return player;
+          }
+        }),
+      };
     }
 
     // Add a player
-    case types.ADD_PLAYER:
-    {
-      const game = games[state.get('type')];
-      return state.update('players', players => {
-        return players.push(game.newPlayer(players.size + 1));
-      });
+    case types.ADD_PLAYER: {
+      const game = games[state.type];
+      return {
+        ...state,
+        players: [
+          ...state.players,
+          game.newPlayer(state.players.length + 1),
+        ],
+      };
     }
 
     // Remove a player
     case types.REMOVE_PLAYER: {
-      return state.update('players', players => {
-        return players.pop();
-      });
+      return {
+        ...state,
+        players: state.players.slice(0, state.players.length - 1),
+      };
     }
 
     // Set the number of players
     case types.SET_NUMBER_OF_PLAYERS: {
-      if (state.get('players').size === action.numberOfPlayers) {
+      if (state.players.length === action.numberOfPlayers) {
         return state;
       }
 
-      const game = games[state.get('type')];
-      return state.update('players', players => {
-        if (players.size < action.numberOfPlayers) {
-          // Il faut ajouter des joueurs
-          while (players.size < action.numberOfPlayers) {
-            players = players.push(game.newPlayer(players.size + 1))
-          }
-        } else {
-          // Il faut retirer des joueurs
-          players = players.take(action.numberOfPlayers);
+      let players;
+      if (state.players.length < action.numberOfPlayers) {
+        const game = games[state.type];
+        players = [...state.players];
+        for (let i = state.players.length; i < action.numberOfPlayers; i++) {
+          players.push(game.newPlayer(i))
         }
-        return players;
-      });
+      } else {
+        players = state.players.slice(0, action.numberOfPlayers - 1);
+      }
+
+      return {
+        ...state,
+        players,
+      };
     }
 
     default:

@@ -1,6 +1,10 @@
 import * as types from '../actions/actionTypes';
 
-const initialState = 'LANDSCAPE';
+const initialState = {
+  width: 0,
+  height: 0,
+  layout: 'LANDSCAPE',
+};
 
 export default function (state = initialState, {type, payload}) {
   switch (type) {

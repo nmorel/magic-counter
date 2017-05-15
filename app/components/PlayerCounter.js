@@ -34,11 +34,11 @@ class PlayerCounterComponent extends Component {
     const fontSizeMedium = baseFontSizeMedium / this.props.nbPlayer;
     const fontSizeLarge = baseFontSizeLarge / this.props.nbPlayer;
 
-    const life = _.padStart(this.props.player.get('life').toString(), 2, '0');
+    const life = _.padStart(this.props.player.life.toString(), 2, '0');
 
-    // const dice = this.props.player.get('dice') ?
+    // const dice = this.props.player.dice ?
     //   (
-    //     <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeSmall)}]}>{this.props.player.get('dice')}</Text>
+    //     <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeSmall)}]}>{this.props.player.dice}</Text>
     //   ) :
     //   (
     //     <TouchableHighlight style={[]} onPress={this.onRollDice}>
@@ -80,8 +80,8 @@ class PlayerCounterComponent extends Component {
           </View>
 
           {/* Player's name */}
-          <View style={[styles.nameContainer, {backgroundColor: getColor(this.props.player.get('id'))}]}>
-            <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeSmall)}]}>{this.props.player.get('name')}</Text>
+          <View style={[styles.nameContainer, {backgroundColor: getColor(this.props.player.id)}]}>
+            <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeSmall)}]}>{this.props.player.name}</Text>
           </View>
         </View>
 
