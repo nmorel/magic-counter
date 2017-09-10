@@ -5,12 +5,15 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as gameActions from '../actions/gameActions';
 import {counterTypes} from '../constants';
-import {Counter} from './Counter';
 import * as _ from 'lodash';
+import Svg, {Path, Rect, Text as SvgText} from 'react-native-svg';
 
 import {calculateFontSize, getColor} from '../helper';
 
+import {FitText} from './FitText';
+
 class PlayerCounterComponent extends Component {
+  k = 0;
   onIncrementLife = () => {
     this.props.actions.incrementCounter(counterTypes.life, this.props.player);
   };
@@ -47,7 +50,10 @@ class PlayerCounterComponent extends Component {
         onPress={this.onIncrementLife}
         underlayColor="rgba(0,0,0,0)"
       >
-        <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeMedium)}]}>+</Text>
+        <Svg key={this.k++} style={{width: '60%', height: '60%'}} viewBox="0 0 24 24">
+          <Path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#FFF" />
+          <Path d="M0 0h24v24H0z" fill="transparent" />
+        </Svg>
       </TouchableHighlight>
     );
 
@@ -58,7 +64,10 @@ class PlayerCounterComponent extends Component {
         onPress={this.onDecrementLife}
         underlayColor="rgba(0,0,0,0)"
       >
-        <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeMedium)}]}>-</Text>
+        <Svg key={this.k++} style={{width: '60%', height: '60%'}} viewBox="0 0 24 24">
+          <Path d="M19 13H5v-2h14v2z" fill="#FFF" />
+          <Path d="M0 0h24v24H0z" fill="transparent" />
+        </Svg>
       </TouchableHighlight>
     );
 
@@ -66,10 +75,13 @@ class PlayerCounterComponent extends Component {
 
     return (
       <View style={[styles.container, this.props.style]}>
-
         {/* Life */}
         <View style={[styles.lifeContainer]}>
-          <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeLarge)}]}>{life}</Text>
+          <Svg style={{width: 200, height: 100, backgroundColor: 'red'}} viewBox="0 0 50 30">
+            <SvgText fill={'#FFF'} fontSize={25} textAnchor="middle" x={25} y={0}>
+              -99
+            </SvgText>
+          </Svg>
         </View>
 
         <View style={[styles.buttonsContainer, orientationStyles[this.props.orientation].buttonsContainer]}>
@@ -77,10 +89,9 @@ class PlayerCounterComponent extends Component {
         </View>
 
         {/* Player's name */}
-        <View style={[styles.nameContainer, {backgroundColor: getColor(this.props.player.id)}]}>
-          <Text style={[styles.text, {fontSize: calculateFontSize(fontSizeSmall)}]}>{this.props.player.name}</Text>
-        </View>
-
+        {/*<View style={[styles.nameContainer, {backgroundColor: getColor(this.props.player.id)}]}>*/}
+        {/*<Text style={[styles.text, {fontSize: calculateFontSize(fontSizeSmall)}]}>{this.props.player.name}</Text>*/}
+        {/*</View>*/}
       </View>
     );
   }
@@ -125,8 +136,6 @@ const styles = StyleSheet.create({
 
   lifeContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
 
